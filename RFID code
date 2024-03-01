@@ -18,10 +18,7 @@ void loop() {
    char uid_array[32] = "";
    char old_uid[32] = "";
    rfid_get_uid(uid_array);
-   /*
-   if (strcmp(uid_array, "")== 0) {return;}
-   else {Serial.println(uid_array);}
-  */
+   
    if (strcmp(uid_array, old_uid)== 0) {
     return;
    }
@@ -47,14 +44,8 @@ void rfid_get_uid(char uid[]) {
    //convert uid byte data to human readable hex 
    byte_to_hexstring(mfrc522.uid.uidByte, uid);
    
-   //Print the output uid string
-   //Serial.print("UID: "); 
-   //Serial.println(uid);
-   
    //Prevents scanner from scanning the same card too many times
    mfrc522.PICC_HaltA();
-   
-   //Serial.println("Card scanned");
 }
 
 void byte_to_hexstring(byte array[], char id_array[])
