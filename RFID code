@@ -15,11 +15,13 @@ void setup() {
 
 
 void loop() {
-  
-   rfid_get_uid();
+   char uid_array[32] = "";
+   rfid_get_uid(uid_array);
+   if (strcmp(uid_array, "")== 0) {return;}
+   else {Serial.println(uid_array);}
 }
 
-void rfid_get_uid() {
+void rfid_get_uid(char uid[]) {
   if ( ! mfrc522.PICC_IsNewCardPresent()) {
       return;
    }
@@ -30,13 +32,13 @@ void rfid_get_uid() {
    }
    //Serial.print* is for testing purposes
    Serial.println("Card tapped"); 
-   char uid[32] = "";
+   
    //convert uid byte data to human readable hex 
    byte_to_hexstring(mfrc522.uid.uidByte, uid);
    
    //Print the output uid string
    Serial.print("UID: "); 
-   Serial.println(uid);
+   //Serial.println(uid);
    
    //Prevents scanner from scanning the same card too many times
    mfrc522.PICC_HaltA();
