@@ -23,6 +23,13 @@ void setup() {
 
 
 void loop() {
+  //Array to hold the accepted IDs
+  /*
+    Code that will add new ids to the list of accepted IDs
+      - probably use eeprom to save the values
+          - Eeprom info: https://docs.arduino.cc/learn/built-in-libraries/eeprom/ 
+  */
+
   //RFID loop start
    char uid_array[32] = "";
    char old_uid[32] = "";
@@ -41,16 +48,23 @@ void loop() {
    //RFID loop end
 
    //Keypad loop start
+      Best to probably write the code as a module that we can call then write the conditional statements in the main loop
 
+      Example:
+      if(new passcode has been entered)
+          check if it is correct
+      else 
+          LCD displays "Passcode is incorrect, try again."
+            - For this I think having the LCD be a separate module which we call to display something for ~5-10 seconds before it's cleared could work
    //Keypad loop end
 
    //Fingerprint loop start
-
+      Example:
+      if(new fingerprint is scanned)
+          check if it is correct
+      else 
+          LCD displays "Fingerprint does not match, try again."
    //Fingerprint loop end
-
-   //LCD loop start
-
-   //LCD loop end
 }
 
 void rfid_get_uid(char uid[]) {
