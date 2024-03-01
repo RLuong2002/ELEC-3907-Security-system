@@ -7,20 +7,22 @@
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
   
 void setup() {
+  //Setup RFID reader
    Serial.begin(9600);
    SPI.begin();      // Initiate  SPI bus
    mfrc522.PCD_Init();   // Initiate MFRC522
-   Serial.println("RFID reader is ready. Tap card.");
+   Serial.println("RFID reader is ready. Tap card."); //Can be removed when all code is combined
 }
 
 
 void loop() {
+  //RFID loop
    char uid_array[32] = "";
    char old_uid[32] = "";
    rfid_get_uid(uid_array);
    
    if (strcmp(uid_array, old_uid)== 0) {
-    return;
+    //Skip
    }
    else {
     Serial.println("Card tapped");
