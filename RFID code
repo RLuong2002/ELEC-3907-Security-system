@@ -26,6 +26,7 @@ void loop() {
     Serial.println("Card tapped");
     strcpy(old_uid, uid_array);
     Serial.println(uid_array);
+    //Then call function to check if uid is in database
    }
 }
 
