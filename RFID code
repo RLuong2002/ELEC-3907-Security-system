@@ -38,8 +38,6 @@ void rfid_get_uid(char uid[]) {
    if ( ! mfrc522.PICC_ReadCardSerial()) {
       return;
    }
-   //Serial.print* is for testing purposes
-   //Serial.println("Card tapped"); 
    
    //convert uid byte data to human readable hex 
    byte_to_hexstring(mfrc522.uid.uidByte, uid);
