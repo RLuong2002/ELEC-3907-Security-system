@@ -4,7 +4,7 @@
 #define RST_PIN 9
 #define SS_PIN 10
 //Declare rfids, 04766402, 5F14241E, C8D42940
-char myStrings[3][32]= {
+char rfid_UIDs [3][32]= {
 "04766402",
 "5F14241E",
 "C8D42940"
