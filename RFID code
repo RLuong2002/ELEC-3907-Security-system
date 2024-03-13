@@ -3,6 +3,12 @@
 
 #define RST_PIN 9
 #define SS_PIN 10
+//Declare rfids, 04766402, 5F14241E, C8D42940
+char myStrings[3][32]= {
+"04766402",
+"5F14241E",
+"C8D42940"
+}
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
   
