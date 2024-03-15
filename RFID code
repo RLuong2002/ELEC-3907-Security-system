@@ -1,16 +1,17 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
-#define RST_PIN 9
-#define SS_PIN 10
+#define RST_PIN 30
+#define SS_PIN 53
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
+
 //Declare rfids, 04766402, 5F14241E, C8D42940
 char registered_UIDs [3][32]= {
 "04766402",
 "5F14241E",
 "C8D42940"
-}
-
-MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
+};
   
 void setup() {
   //Setup RFID reader
@@ -38,6 +39,9 @@ void loop() {
     if(check_uid(uid_array)){
       Serial.println("Unlock door");
     }
+    else{
+      Serial.println("Unregistered UID");
+    }
    }
 }
 
@@ -51,6 +55,7 @@ bool check_uid(char uid[]) {
   }
   return matching;
 }
+
 void rfid_get_uid(char uid[]) {
   if ( ! mfrc522.PICC_IsNewCardPresent()) {
       return;
