@@ -1,1 +1,128 @@
+#include <SPI.h>
+#include <MFRC522.h>
+#include <LiquidCrystal.h> // include the library code
+#include <Keypad.h>
 
+#define RST_PIN 30
+#define SS_PIN 53
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
+
+//Declare rfids, 04766402, 5F14241E, C8D42940
+char registered_UIDs [3][32]= {
+"04766402",
+"5F14241E",
+"C8D42940"
+};
+
+//constants for the number of rows and columns in the LCD
+const int lcdnumRows = 2;
+const int lcdnumCols = 24;
+
+// initialize the library with the numbers of the interface pins
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+//Keypad
+const byte keypadROWS = 4; 
+const byte keypadCOLS = 3; 
+
+char hexaKeys[keypadROWS][keypadCOLS] = {
+  {'1', '2', '3'},
+  {'4', '5', '6'},
+  {'7', '8', '9'},
+  {'*', '0', '#'}
+};
+
+byte rowPins[keypadROWS] = {9, 8, 7, 6}; 
+byte colPins[keypadCOLS] = {5, 4, 3};
+
+Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
+
+
+void setup() {
+  //Setup RFID reader
+   Serial.begin(9600);
+   SPI.begin();      // Initiate  SPI bus
+   mfrc522.PCD_Init();   // Initiate MFRC522
+
+  // Setup LCD
+   lcd.begin(lcdnumCols, lcdnumRows);
+}
+
+
+void loop() {
+  //RFID loop
+   char uid_array[32] = "";
+   char old_uid[32] = "";
+   rfid_get_uid(uid_array);
+   
+   if (strcmp(uid_array, old_uid) != 0) {
+    Serial.println("Card tapped");
+    strcpy(old_uid, uid_array);
+    Serial.println(uid_array);
+    //Then call function to check if uid is in database
+    if(check_uid(uid_array)){
+      Serial.println("Unlock door");
+      lcd_print(0, 0, "Door unlocked.")
+      lcd_print(0, 1, "Welcome.")
+    }
+    else{
+      Serial.println("Unregistered UID");
+      lcd_print(0, 0, "Unregistered UID, try again.")
+      lcd_print(0, 1, "")
+    }
+   }
+  //RFID loop end
+  
+ 
+}
+void keypad (){
+  char customKey = customKeypad.getKey();
+  
+}
+void lcd_print(int col, int line, char text[]){
+  //Set cursor
+  lcd.setCursor(col, line);
+  // print text
+  lcd.print(text);
+}
+
+bool check_uid(char uid[]) {
+  bool matching = false;
+  for (int i = 0; i < 3; i++) {
+    if ((strcmp(uid, registered_UIDs[i])) == 0){
+      matching = true;
+      return matching;
+    }
+  }
+  return matching;
+}
+
+void rfid_get_uid(char uid[]) {
+  if ( ! mfrc522.PICC_IsNewCardPresent()) {
+      return;
+   }
+
+   // Select one of the cards
+   if ( ! mfrc522.PICC_ReadCardSerial()) {
+      return;
+   }
+   
+   //convert uid byte data to human readable hex 
+   byte_to_hexstring(mfrc522.uid.uidByte, uid);
+   
+   //Prevents scanner from scanning the same card too many times
+   mfrc522.PICC_HaltA();
+}
+
+void byte_to_hexstring(byte array[], char id_array[])
+{
+   for (int i = 0; i < 4; i++)
+   {
+      byte digit1 = (array[i] >> 4) & 0x0F;
+      byte digit2 = (array[i]) & 0x0F;
+      id_array[i*2] = digit1  < 0xA ? '0' + digit1 : 'A' + digit1 - 0xA;
+      id_array[i*2+1] = digit2  < 0xA ? '0' + digit2 : 'A' + digit2 - 0xA;
+   }
+   id_array[4*2] = '\0';
+}
