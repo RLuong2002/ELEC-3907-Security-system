@@ -36,7 +36,7 @@ char hexaKeys[keypadROWS][keypadCOLS] = {
 byte rowPins[keypadROWS] = {9, 8, 7, 6}; 
 byte colPins[keypadCOLS] = {5, 4, 3};
 
-Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
+Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, keypadROWS, keypadCOLS);
 
 
 void setup() {
@@ -63,13 +63,13 @@ void loop() {
     //Then call function to check if uid is in database
     if(check_uid(uid_array)){
       Serial.println("Unlock door");
-      lcd_print(0, 0, "Door unlocked.")
-      lcd_print(0, 1, "Welcome.")
+      lcd_print(0, 0, "Door unlocked.");
+      lcd_print(0, 1, "Welcome.");
     }
     else{
       Serial.println("Unregistered UID");
-      lcd_print(0, 0, "Unregistered UID, try again.")
-      lcd_print(0, 1, "")
+      lcd_print(0, 0, "Unregistered UID, try again.");
+      lcd_print(0, 1, "");
     }
    }
   //RFID loop end
